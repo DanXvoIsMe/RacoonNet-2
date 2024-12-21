@@ -114,9 +114,9 @@ tags['html']=function(arg)
 end
 tags['/body']=function(arg)
 end
-tags['/execute']=function(arg)
+tags['/luascript']=function(arg)
 end
-tags['execute'] = function(arg)
+tags['luascript'] = function(arg)
     local content = arg.text or ""
     if content then
         local func, err = load(content)
