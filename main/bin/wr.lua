@@ -125,12 +125,12 @@ tags['luascript'] = function(arg)
             local success, result = pcall(func)
             if not success then
                 gpu.setForeground(0xFF0000)
-                winwrite("Error executing Lua code: " .. result)
+                error(err)
                 gpu.setForeground(txColour)
             end
         else
             gpu.setForeground(0xFF0000)
-            winwrite("Invalid Lua code: " .. err)
+		
             gpu.setForeground(txColour)
         end
     end
