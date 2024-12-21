@@ -114,6 +114,26 @@ tags['html']=function(arg)
 end
 tags['/body']=function(arg)
 end
+tags['/execute']=function(arg)
+end
+tags['execute'] = function(arg)
+    local content = arg.text or ""
+    if content then
+        local func, err = load(content)
+        if func then
+            local success, result = pcall(func)
+            if not success then
+                gpu.setForeground(0xFF0000)
+                winwrite("Error executing Lua code: " .. result)
+                gpu.setForeground(txColour)
+            end
+        else
+            gpu.setForeground(0xFF0000)
+            winwrite("Invalid Lua code: " .. err)
+            gpu.setForeground(txColour)
+        end
+    end
+end
 tags['body']=function(arg)
   local param=tonumber(arg.text)
   if param then txColour = param gpu.setForeground(param) end
@@ -172,16 +192,18 @@ tags['/a']=function()
 end
 
 function tagWork(tag)
-  local name=tag:match('%S+')
-  if tags[name] then
-    local params={}
-    for k,v in tag:gmatch('(%w+)=([^%s"]+)') do params[k]=v end
-    for k,v in tag:gmatch('(%w+)="([^"]+)"') do params[k]=v end
-    tags[name](params)
-  else
-    winwrite( '<'..tag..'>' )
-  end
+    local name = tag:match('%S+')
+    if tags[name] then
+        local params = {}
+        for k, v in tag:gmatch('(%w+)=([^%s"]+)') do params[k] = v end
+        for k, v in tag:gmatch('(%w+)="([^"]+)"') do params[k] = v end
+        params.text = tag:match('>(.-)<')
+        tags[name](params)
+    else
+        winwrite('<'..tag..'>')
+    end
 end
+
 
 function winline(line)
   if line then
