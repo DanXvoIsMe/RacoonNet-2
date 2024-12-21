@@ -27,9 +27,7 @@ function route(recieverip, senderip, ... )
     lan[clientscard[cl]:sub(1,3)]:directsend(clients[cl], recieverip, senderip, ...)
   else
     if wan then
-	  wan:directsend(wan.router, recieverip, senderip, ...)
-	else
-	  sysutils.log(lang.deliverr..": \""..recieverip.."\".",2, "router")
+    wan:directsend(wan.router, recieverip, senderip, ...)
     end
   end
 end
@@ -47,23 +45,38 @@ end
 --//Версия
 function commands.ver()
   sysutils.log(lang.ver..": "..sendIP, 1, "router")
-  route(sendIP, recIP, "WiFi router ver 1.0" )
+  route(sendIP, recIP, "DNSROUTER-v1" )
   return 
 end
 
---//Выдача ip
+local IPtoDNS = {
+    ["IP"] = "domain"
+}
+
 function commands.getip()
-  if lan[acceptedAdr:sub(1,3)] then
-    local adr=ip.."."..senderAdr:sub(1,3)
-	clients[adr]=senderAdr
-	clientscard[adr]=acceptedAdr
-    lan[acceptedAdr:sub(1,3)]:directsend(senderAdr, adr, ip, "setip" )
-	sysutils.log(lang.givenip..": "..adr, 1, "router")
-    return 
-  else
-    return
-  end
+    local adr
+    local acceptedPrefix = acceptedAdr:sub(1, 3)
+    local found = false
+    if lan[acceptedPrefix] then
+        local senderPrefix = senderAdr:sub(1, 3)
+        if IPtoDNS[senderPrefix] then
+            adr = IPtoDNS[senderPrefix]
+            found = true
+        else
+            found = false
+        end
+        if not found then
+            adr = ip .. "." .. senderPrefix
+        end
+        clients[adr] = senderAdr
+        clientscard[adr] = acceptedAdr
+        lan[acceptedPrefix]:directsend(senderAdr, adr, ip, "setip")
+        sysutils.log(lang.givenip .. ": " .. adr, 1, "router")
+    else
+        sysutils.log(lang.noLan .. ": " .. acceptedAdr, 2, "router")  -- Log if no LAN found
+    end
 end
+
 sysutils.log(lang.launch, 1, "router")
 if not config.lan then
   sysutils.log(lang.noconfig, 4, "router")
@@ -104,13 +117,13 @@ end
 function routing()
   while true do
     packet, acceptedAdr, senderAdr, recIP, sendIP, command = rn.receiveall()
-	if recIP == ip or recIP == "" then
-	  if commands[command] then
-	      commands[command](table.unpack(packet,9))
-	  end  
-	else
-	  route(recIP,sendIP,table.unpack(packet,8))
-	end
+  if recIP == ip or recIP == "" then
+    if commands[command] then
+        commands[command](table.unpack(packet,9))
+    end  
+  else
+    route(recIP,sendIP,table.unpack(packet,8))
+  end
   end
 end
 
@@ -121,6 +134,6 @@ while true do
   local key=ev[4]
   if key==16 then --Q
     t:kill()
-	break
+  break
   end
 end
