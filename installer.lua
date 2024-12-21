@@ -1,6 +1,6 @@
 local shell = require("shell")
 local fs = require("filesystem")
-local prefix = "https://raw.githubusercontent.com/AlexCatze/RacoonNet/master/main/"
+local prefix = "https://raw.githubusercontent.com/DanXvoIsMe/RacoonNet-2/master/main/"
 local comp = require("computer")
 local files = {"/bin/chat.lua","/bin/chat_server.lua","/bin/ping.lua","/bin/rnconfig.lua","/bin/routconf.lua","/bin/router.lua","/bin/webserver.lua","/bin/wr.lua","/etc/config/sys.cfg","/etc/lang/ru.router.lang","/lib/opennet.lua","/lib/racoonnet.lua","/lib/rn_modem.lua","/lib/rn_stem.lua","/lib/rn_tunnel.lua",}
 
