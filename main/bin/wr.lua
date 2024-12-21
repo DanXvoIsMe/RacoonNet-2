@@ -193,10 +193,7 @@ tags['/a']=function()
 end
 
 tags['getIP']=function()
-	local MyIP,err=opennet.getIP()
-	if not MyIP then
-	  error(err)
-	end
+    term.write(opennet.getIP())
 end
 
 function tagWork(tag)
