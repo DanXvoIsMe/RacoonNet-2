@@ -193,7 +193,7 @@ tags['/a']=function()
 end
 
 tags['getIP']=function()
-    term.write(opennet.getIP())
+    print(opennet.getIP())
 end
 
 function tagWork(tag)
