@@ -192,9 +192,10 @@ tags['/a']=function()
 end
 
 tags['getIP']=function()
-local MyIP,err=on.getIP()
-if not MyIP then
-  error(err)
+	local MyIP,err=on.getIP()
+	if not MyIP then
+	  error(err)
+	end
 end
 
 function tagWork(tag)
