@@ -9,6 +9,7 @@ local sysutils = require("sysutils")
 local gpu  = require("component").gpu
 local text = require("text")
 local wlen = require("unicode").wlen
+local opennet = require("opennet")
 
 local config = sysutils.readconfig("wr")
 
@@ -192,7 +193,7 @@ tags['/a']=function()
 end
 
 tags['getIP']=function()
-	local MyIP,err=on.getIP()
+	local MyIP,err=opennet.getIP()
 	if not MyIP then
 	  error(err)
 	end
