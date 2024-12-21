@@ -191,6 +191,12 @@ tags['/a']=function()
   end
 end
 
+tags['getIP']=function()
+local MyIP,err=on.getIP()
+if not MyIP then
+  error(err)
+end
+
 function tagWork(tag)
     local name = tag:match('%S+')
     if tags[name] then
